@@ -25,7 +25,7 @@ function AccordionItem({
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between py-4 text-left"
       >
-        <span className="text-sm font-medium">{title}</span>
+        <span className="text-sm font-medium tracking-wide">{title}</span>
         <ChevronDown
           className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
@@ -54,20 +54,31 @@ export default function ProductAccordion({ description, details }: ProductAccord
         </AccordionItem>
       )}
 
-      <AccordionItem title="Shipping & Returns">
+      <AccordionItem title="Candle Care">
         <ul className="space-y-2">
-          <li>Free standard shipping on orders over $75</li>
-          <li>Express shipping available at checkout</li>
-          <li>Free returns within 30 days of delivery</li>
-          <li>Items must be unworn with original tags</li>
+          <li>Trim the wick to 5mm before every burn for a clean, even flame</li>
+          <li>Allow the wax to melt fully to the edges on the first burn (2–3 hours)</li>
+          <li>Never burn for more than 4 hours at a time</li>
+          <li>Keep away from drafts, children, and pets</li>
+          <li>Discontinue use when 10mm of wax remains</li>
         </ul>
       </AccordionItem>
 
-      <AccordionItem title="Care Instructions">
+      <AccordionItem title="Ingredients">
         <ul className="space-y-2">
-          <li>Please refer to the care label on the product</li>
-          <li>Store in a cool, dry place away from direct sunlight</li>
-          <li>Handle with care to maintain product quality</li>
+          <li>100% natural soy wax (non-GMO)</li>
+          <li>Premium phthalate-free fragrance oil</li>
+          <li>Natural cotton-core wick (lead-free)</li>
+          <li>Reusable glass vessel</li>
+        </ul>
+      </AccordionItem>
+
+      <AccordionItem title="Shipping & Returns">
+        <ul className="space-y-2">
+          <li>Free standard shipping on orders over ₹1,499</li>
+          <li>Express shipping available at checkout</li>
+          <li>Free returns within 30 days of delivery</li>
+          <li>Candles must be unlit and in original packaging for returns</li>
         </ul>
       </AccordionItem>
     </div>

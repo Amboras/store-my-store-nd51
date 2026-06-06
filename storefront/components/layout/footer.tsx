@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { Flame, Instagram, Mail } from 'lucide-react'
 import { clearConsent } from '@/lib/cookie-consent'
 import { usePolicies } from '@/hooks/use-policies'
 
 const footerLinks = {
   shop: [
-    { label: 'All Products', href: '/products' },
+    { label: 'All Candles', href: '/products' },
     { label: 'New Arrivals', href: '/products?sort=newest' },
     { label: 'Collections', href: '/collections' },
   ],
@@ -20,12 +21,10 @@ const footerLinks = {
 export default function Footer() {
   const { policies } = usePolicies()
 
-  // Build company links dynamically based on available policies
   const companyLinks = [
     { label: 'About', href: '/about' },
   ]
 
-  // Add policy links only if they're set in the admin
   if (policies?.privacy_policy) {
     companyLinks.push({ label: 'Privacy Policy', href: '/privacy' })
   }
@@ -40,20 +39,39 @@ export default function Footer() {
   }
 
   return (
-    <footer className="border-t bg-muted/30">
+    <footer className="border-t" style={{ backgroundColor: 'hsl(38 18% 94%)' }}>
       <div className="container-custom py-section-sm">
         {/* Main Footer */}
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block">
-              <span className="font-heading text-2xl font-semibold">
-                Store
+            <Link href="/" className="inline-flex items-center gap-2">
+              <Flame className="h-5 w-5" style={{ color: 'var(--brand-primary)' }} strokeWidth={1.5} />
+              <span className="font-heading text-2xl font-semibold" style={{ letterSpacing: '0.04em' }}>
+                Lumière
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Curated products crafted with care. Quality you can feel, design you can see.
+              Small-batch, hand-poured candles made with natural soy wax and premium fragrance oils. Created to slow you down and light you up.
             </p>
+            <div className="mt-5 flex items-center gap-3">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-full border border-border hover:border-foreground transition-colors"
+                aria-label="Follow us on Instagram"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a
+                href="mailto:hello@lumierecandles.com"
+                className="p-2 rounded-full border border-border hover:border-foreground transition-colors"
+                aria-label="Email us"
+              >
+                <Mail className="h-4 w-4" />
+              </a>
+            </div>
           </div>
 
           {/* Shop Links */}
@@ -102,7 +120,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Store. All rights reserved.
+            &copy; {new Date().getFullYear()} Lumière Candles. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <button

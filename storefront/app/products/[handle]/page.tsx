@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 3600 // ISR: revalidate every hour
+export const revalidate = 3600
 import { medusaServerClient } from '@/lib/medusa-client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Truck, RotateCcw, Shield, ChevronRight } from 'lucide-react'
-import ProductActions from '@/components/product/product-actions'
+import { ChevronRight, Leaf, Award, Flame } from 'lucide-react'
+import CandleProductActions from '@/components/product/candle-product-actions'
 import ProductAccordion from '@/components/product/product-accordion'
 import { ProductViewTracker } from '@/components/product/product-view-tracker'
 import { getProductPlaceholder } from '@/lib/utils/placeholder-images'
@@ -74,7 +74,7 @@ export async function generateMetadata({
 
   return {
     title: product.title,
-    description: product.description || `Shop ${product.title}`,
+    description: product.description || `Shop ${product.title} — hand-poured artisan candle by Lumière`,
     openGraph: {
       title: product.title,
       description: product.description || `Shop ${product.title}`,
@@ -82,6 +82,12 @@ export async function generateMetadata({
     },
   }
 }
+
+const craftBadges = [
+  { icon: Leaf, label: '100% Natural Soy' },
+  { icon: Flame, label: 'Hand-Poured' },
+  { icon: Award, label: 'Premium Fragrance' },
+]
 
 export default async function ProductPage({
   params,
@@ -99,10 +105,9 @@ export default async function ProductPage({
 
   const allImages = [
     ...(product.thumbnail ? [{ url: product.thumbnail }] : []),
-    ...(product.images || []).filter((img: any) => img.url !== product.thumbnail),
+    ...(product.images || []).filter((img: { url: string }) => img.url !== product.thumbnail),
   ]
 
-  // Use placeholder if no images
   const displayImages = allImages.length > 0
     ? allImages
     : [{ url: getProductPlaceholder(product.id) }]
@@ -110,19 +115,19 @@ export default async function ProductPage({
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="border-b">
+      <div className="border-b" style={{ backgroundColor: 'hsl(38 28% 96%)' }}>
         <div className="container-custom py-3">
           <nav className="flex items-center gap-2 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href="/products" className="hover:text-foreground transition-colors">Shop</Link>
+            <Link href="/products" className="hover:text-foreground transition-colors">Candles</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground">{product.title}</span>
           </nav>
         </div>
       </div>
 
-      <div className="container-custom py-8 lg:py-12">
+      <div className="container-custom py-8 lg:py-14">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Product Images */}
           <div className="space-y-3">
@@ -139,7 +144,7 @@ export default async function ProductPage({
 
             {displayImages.length > 1 && (
               <div className="grid grid-cols-4 gap-3">
-                {displayImages.slice(1, 5).map((image: any, idx: number) => (
+                {displayImages.slice(1, 5).map((image: { url: string }, idx: number) => (
                   <div
                     key={idx}
                     className="relative aspect-[3/4] overflow-hidden bg-muted rounded-sm"
@@ -155,48 +160,49 @@ export default async function ProductPage({
                 ))}
               </div>
             )}
+
+            {/* Craft badges under images */}
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              {craftBadges.map((badge) => (
+                <div
+                  key={badge.label}
+                  className="flex items-center gap-2 justify-center text-xs text-muted-foreground border rounded-sm py-2.5 px-2"
+                  style={{ borderColor: 'hsl(38 15% 84%)', backgroundColor: 'hsl(38 28% 97%)' }}
+                >
+                  <badge.icon className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--brand-primary)' }} strokeWidth={1.5} />
+                  <span className="leading-tight">{badge.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Product Info */}
-          <div className="lg:sticky lg:top-24 lg:self-start space-y-6">
-            {/* Title & Subtitle */}
+          <div className="lg:sticky lg:top-24 lg:self-start space-y-5">
+            {/* Title */}
             <div>
               {product.subtitle && (
-                <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-2">
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
                   {product.subtitle}
                 </p>
               )}
-              <h1 className="text-h2 font-heading font-semibold">{product.title}</h1>
+              <p className="text-xs uppercase tracking-[0.18em] mb-2" style={{ color: 'var(--brand-primary)' }}>
+                Artisan Candle
+              </p>
+              <h1 className="font-heading text-h2 font-semibold">{product.title}</h1>
             </div>
 
             <ProductViewTracker
               productId={product.id}
               productTitle={product.title}
               variantId={product.variants?.[0]?.id || null}
-              currency={product.variants?.[0]?.calculated_price?.currency_code || 'usd'}
+              currency={product.variants?.[0]?.calculated_price?.currency_code || 'inr'}
               value={product.variants?.[0]?.calculated_price?.calculated_amount ?? null}
             />
 
-            {/* Variant Selector + Price + Add to Cart (client component) */}
-            <ProductActions product={product} variantExtensions={variantExtensions} />
+            {/* CRO-Optimized Actions */}
+            <CandleProductActions product={product} variantExtensions={variantExtensions} />
 
-            {/* Trust Signals */}
-            <div className="grid grid-cols-3 gap-4 py-6 border-t">
-              <div className="text-center">
-                <Truck className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">Free Shipping</p>
-              </div>
-              <div className="text-center">
-                <RotateCcw className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">30-Day Returns</p>
-              </div>
-              <div className="text-center">
-                <Shield className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
-                <p className="text-xs text-muted-foreground">Secure Checkout</p>
-              </div>
-            </div>
-
-            {/* Accordion Sections */}
+            {/* Accordion */}
             <ProductAccordion
               description={product.description}
               details={product.metadata as Record<string, string> | undefined}
